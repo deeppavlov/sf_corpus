@@ -1,7 +1,3 @@
-import pandas as pd
-from tqdm import tqdm
-import time
-from random import randint
 import json
 
 
@@ -9,84 +5,84 @@ detach = """DETACH - Ending the dialogue. Saying goodbye or other similar action
 Examples:
 1. speaker_1: Okay, I have to go $$$ DETACH
 speaker_2: Bye-bye $$$ DETACH
-2. speaker_1: It's so nice! $$$ OTHER
+2. speaker_1: It's so nice!
 speaker_2: Sorry, I need to hurry $$$ DETACH
-3. speaker_1: Can you help me? $$$ OTHER
-speaker_2: I can't talk right now, later $$$ DETACH
-3. speaker_1: Good. $$$ OTHER
+3. speaker_1: Can you help me?
+speaker_2: I can't talk right now, later. $$$ DETACH
+3. speaker_1: Good.
 speaker_1: Let's go now. $$$ DETACH
-3. speaker_1: Well, I have to go to practice. $$$ OTHER
+3. speaker_1: Well, I have to go to practice.
 speaker_1: See you later. $$$ DETACH
 """
 
 refute = """REFUTE - Refusing to move on to a new topic. It is NOT disagreement. It is refusal to discuss something.
 Examples:
-1.  speaker_1: I’m out $$$ OTHER
+1.  speaker_1: I’m out
 speaker_2: You can’t do that, it’s my birthday $$$ REFUTE
-2. speaker_1: Well, come and talk to me then. $$$ OTHER
+2. speaker_1: Well, come and talk to me then.
 speaker_2: Certainly not. $$$ REFUTE
-3. speaker_1: Oh, God, we forgot to cheer for Daddy. $$$ OTHER
+3. speaker_1: Oh, God, we forgot to cheer for Daddy.
 speaker_2: Never mind. $$$ REFUTE
-4. speaker_1: Tell me about Jane's new boyfriend. $$$ OTHER
+4. speaker_1: Tell me about Jane's new boyfriend.
 speaker_2: Sorry, that's none of your business. $$$ REFUTE"""
 
 
 rebound = """REBOUND - Questioning the relevance, reliability of the previous statement. Must be interrogative.
 Examples:
-1.  speaker_1: This conversation needs Allenby. $$$ OTHER
+1.  speaker_1: This conversation needs Allenby.
 speaker_2: Who are you to say that? $$$ REBOUND
-6. speaker_1: It will help us to relax. $$$ OTHER
+6. speaker_1: It will help us to relax.
 speaker_2: Do you really think so? $$$ REBOUND
-7. speaker_1: I can do 30 push-ups a minute. $$$ OTHER
+7. speaker_1: I can do 30 push-ups a minute.
 speaker_2: Really? $$$ REBOUND
-8. speaker_1: I won't. $$$ OTHER
+8. speaker_1: I won't.
 speaker_2: So what's the problem? $$$ REBOUND
-9. speaker_1: Anything? $$$ OTHER
+9. speaker_1: Anything?
 speaker_2: Do you really believe that we can do anything? $$$ REBOUND"""
 
 
 rechallenge = """RECHALLENGE - Offering an alternative position. Must be interrogative.
 Examples:
-1.  speaker_1: Messi is the best. $$$ OTHER
+1.  speaker_1: Messi is the best.
 speaker_2: Maybe Pele is the best one? $$$ RECHALLENGE
-2. speaker_1: Mary, I really like your new dress. $$$ OTHER
+2. speaker_1: Mary, I really like your new dress.
 speaker_2: The old one is better, don't you think so? $$$ RECHALLENGE
-3. speaker_1: So that we can sit down together and listen to some music. $$$ OTHER
+3. speaker_1: So that we can sit down together and listen to some music.
 speaker_2: Listen to some music? And who’ll cook dinner? $$$ RECHALLENGE
-4. speaker_1: She don’t have any teacher’s pets. $$$ OTHER
+4. speaker_1: She don’t have any teacher’s pets.
 speaker_2: Doesn’t every teacher have a teacher’s pet? $$$ RECHALLENGE"""
 
 
 check = """CHECK - Make the previous speaker repeat something. NB: Only used to ask to repeat something they did not hear.
 Examples:
-1. speaker_1: And they headed straight into the forest. $$$ OTHER
+1. speaker_1: And they headed straight into the forest.
 speaker_2: Straight into the what? $$$ CHECK
-2. speaker_1: Our friendship is over. $$$ OTHER
+2. speaker_1: Our friendship is over.
 speaker_2: What do you mean? $$$ CHECK
-3. speaker_1: Do you know Sally? $$$ OTHER
+3. speaker_1: Do you know Sally?
 speaker_2: Sally? $$$ CHECK
-4. speaker_1: I think that's impossible! $$$ OTHER
+4. speaker_1: I think that's impossible!
 speaker_2: You mean 30 push-ups? $$$ CHECK
-5. speaker_1: She taught us that you can do anything that you want to do. $$$ OTHER
+5. speaker_1: She taught us that you can do anything that you want to do.
 speaker_2: Anything? $$$ CHECK
 """
 
 
 confirm = """CONFIRM - Asking to confirmation the information to make sure they understood correctly.
 Examples:
-1.  speaker_1: Well, he rang Roman, he rang Roman a week ago. $$$ OTHER
+1.  speaker_1: Well, he rang Roman, he rang Roman a week ago.
 speaker_2: Did he? $$$ CONFIRM
-2. speaker_1: It will help us to relax. $$$ OTHER
+2. speaker_1: It will help us to relax.
 speaker_2: Do you really think so? $$$ CONFIRM
-3. speaker_1: I can do 30 push-ups a minute. $$$ OTHER
+3. speaker_1: I can do 30 push-ups a minute.
 speaker_2: Really? $$$ CONFIRM
-4. speaker_1: I play goalie myself. $$$ OTHER
+4. speaker_1: I play goalie myself.
 speaker_2: Oh, yeah? $$$ CONFIRM
-5. speaker_1: Do you believe this? $$$ OTHER
+5. speaker_1: Do you believe this?
 speaker_2: Is he really? $$$ CONFIRM
-6. speaker_1: And who’ll cook dinner? $$$ OTHER
+6. speaker_1: And who’ll cook dinner?
 speaker_1: Will you? $$$ CONFIRM
-7. speaker_1: I found a new way to learn Chinese and it works very well. $$$ OTHER
+7. speaker_1: I found a new way to learn Chinese and it works very well.
 speaker_2: You did? $$$ CONFIRM
 """
 
@@ -107,17 +103,17 @@ speaker_1: What had you expected? $$$ CLARIFY
 
 probe = """PROBE - Requesting a confirmation of some information. The speaker themselves speculates about this information. NB: The speaker asks a question to confirm their own idea.
 Examples:
-1. speaker_1: Then they went to visit Roman. $$$ OTHER
+1. speaker_1: Then they went to visit Roman.
 speaker_2: Because Roman lives in Denning Road also? $$$ PROBE
-2. speaker_1: You just sit there in a daze, gazing at the monitor and dealing with files and documents. $$$ OTHER
+2. speaker_1: You just sit there in a daze, gazing at the monitor and dealing with files and documents.
 speaker_2: Why don't you give a full play to your energy after work? $$$ PROBE
-3. speaker_1: The Filipino kid is a genius. $$$ OTHER
+3. speaker_1: The Filipino kid is a genius.
 speaker_2: So you'll make the Stars.com deadline, and have us up and running next week? $$$ PROBE
-4. speaker_1: Come by any time. $$$ OTHER
+4. speaker_1: Come by any time.
 speaker_2: Shall I say around ten o'clock? $$$ PROBE
-5. speaker_1: They have a big new fancy house. $$$ OTHER
+5. speaker_1: They have a big new fancy house.
 speaker_2: Does Jim make a lot of money? $$$ PROBE
-6. speaker_1: You said she was strict. $$$ OTHER
+6. speaker_1: You said she was strict.
 speaker_1: Did she have a lot of rules? $$$ PROBE
 """
 
@@ -337,53 +333,53 @@ speaker_1: How are you? $$$ ENGAGE
 
 enhance = """ENHANCE - Adding details to the previous statement, adding information about time, place, reason, etc.
 Examples:
-1.  speaker_1: Katty Perry is a great performer. $$$ OTHER
+1.  speaker_1: Katty Perry is a great performer.
 speaker_1: We've been to her show in Las Vegas. $$$ ENHANCE
-2. speaker_1: I need to buy a new dress for this evening. $$$ OTHER
+2. speaker_1: I need to buy a new dress for this evening.
 speaker_1: It has to be in the disco style. $$$ ENHANCE
-3. speaker_1: I think the sun is going to explode soon. $$$ OTHER
+3. speaker_1: I think the sun is going to explode soon.
 speaker_1: It's becoming hotter every year. $$$ ENHANCE
-4. speaker_1: I heard a story about a robbery in Amsterdam $$$ OTHER
+4. speaker_1: I heard a story about a robbery in Amsterdam
 speaker_1: An old lady was robbed of her dog. $$$ ENHANCE
-5. speaker_1: You're his best friend. $$$ OTHER
+5. speaker_1: You're his best friend.
 speaker_1: Since his childhood. $$$ ENHANCE
-6. speaker_1: This is her favourite song. $$$ OTHER
+6. speaker_1: This is her favourite song.
 speaker_1: I knew this from her feed on VK. $$$ ENHANCE
-7. speaker_1: This is the newest theory about implementing new technology to our project. $$$ OTHER
+7. speaker_1: This is the newest theory about implementing new technology to our project.
 speaker_1: It was developed by Mr.Sadman. $$$ ENHANCE"""
 
 elaborate = """ELABORATE - Clarifying or rephrasing the previous statement or giving examples to it.
 Examples:
-1.  speaker_1: Then stay away. $$$ OTHER
+1.  speaker_1: Then stay away.
 speaker_1: No one is keeping you from doing that. $$$ ELABORATE
-2. speaker_1: I bought some useful staff today. $$$ OTHER
+2. speaker_1: I bought some useful staff today.
 speaker_1: I mean evrything we need for our party. $$$ ELABORATE
-3. speaker_1: I heard the public transportation in that city is very good. $$$ OTHER
+3. speaker_1: I heard the public transportation in that city is very good.
 speaker_1: I heard that it costs not so much in comparison to other cities and still in great condition. $$$ ELABORATE
-4. speaker_1: Ariana Grande canceled her tour. $$$ OTHER
+4. speaker_1: Ariana Grande canceled her tour.
 speaker_2: We need to refund the tickets. $$$ ELABORATE
-5. speaker_1: I'm so disappointed by his indifference. $$$ OTHER
+5. speaker_1: I'm so disappointed by his indifference.
 speaker_1: He forgot about my birthday. $$$ ELABORATE"""
 
 acknowledge = """ACKNOWLEDGE - Indicating knowledge or understanding of the information provided
 Examples:
-1.  speaker_1: This house doesn't belong to him. $$$ OTHER
+1.  speaker_1: This house doesn't belong to him.
 speaker_2: I knew it. $$$ ACKNOWLEDGE
-2. speaker_1: This's my personal task $$$ OTHER
+2. speaker_1: This's my personal task
 speaker_2:  I see. $$$ ACKNOWLEDGE
-3. speaker_1: I'm a fan of horror movies. $$$ OTHER
+3. speaker_1: I'm a fan of horror movies.
 speaker_2: I'm aware of this fact. $$$ ACKNOWLEDGE
-4. speaker_1: She is the most arrogant lady in the city $$$ OTHER
+4. speaker_1: She is the most arrogant lady in the city
 speaker_2: I knew it from the very beginning. $$$ ACKNOWLEDGE
-5. speaker_1: I'm in love with her $$$ OTHER
+5. speaker_1: I'm in love with her
 speaker_2: I understand why. $$$ ACKNOWLEDGE
-6. speaker_1: Is it the best recipe? $$$ OTHER
+6. speaker_1: Is it the best recipe?
 speaker_2: I'm sure. $$$ ACKNOWLEDGE
-7. speaker_1: He'll buy this castle. $$$ OTHER
+7. speaker_1: He'll buy this castle.
 speaker_2: I have no doubts about it. $$$ ACKNOWLEDGE
-8. speaker_1: Katy is a future pop star $$$ OTHER
+8. speaker_1: Katy is a future pop star
 speaker_2: I know that for sure. $$$ ACKNOWLEDGE
-9. speaker_1: He kissed her at school. $$$ OTHER
+9. speaker_1: He kissed her at school.
 speaker_2: I know $$$ ACKNOWLEDGE"""
 
 dict_prompts = {
